@@ -38,24 +38,34 @@ const HomeScreen: React.FC = () => {
     return () => clearInterval(interval);
   }, [assets]);
 
-  const handleSortAsc = (): void =>
+  const handleSortNameAsc = (): void =>
     setAssets(
-      assets.sort((a, b) => a.dailyChangePercent - b.dailyChangePercent),
+      [...assets].sort((a, b) => a.name.localeCompare(b.name)),
     );
 
-  const handleSortDesc = (): void =>
+  const handleSortNameDesc = (): void =>
     setAssets(
-      assets.sort((a, b) => b.dailyChangePercent - a.dailyChangePercent),
+      [...assets].sort((a, b) =>  b.name.localeCompare(a.name)),
+    );
+    
+  const handleSortPerfAsc = (): void =>
+    setAssets(
+      [...assets].sort((a, b) => a.dailyChangePercent - b.dailyChangePercent)
+    );
+
+  const handleSortPerfDesc = (): void =>
+    setAssets(
+      [...assets].sort((a, b) => b.dailyChangePercent - a.dailyChangePercent)
     );
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Sorting:</Text>
       <View style={styles.betweenContainer}>
-        <Button title={"Sort Perf asc"} onPress={handleSortAsc} />
-        <Button title={"Sort Perf desc"} onPress={handleSortDesc} />
-        <Button title={"Sort Name asc"} />
-        <Button title={"Sort Name desc"} />
+        <Button title={"Sort Perf asc"} onPress={handleSortPerfAsc} />
+        <Button title={"Sort Perf desc"} onPress={handleSortPerfDesc} />
+        <Button title={"Sort Name asc"} onPress={handleSortNameAsc}/>
+        <Button title={"Sort Name desc"} onPress={handleSortNameDesc} />
       </View>
       <FlatList
         keyExtractor={asset => `${asset.id}`}
