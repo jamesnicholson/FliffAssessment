@@ -7,16 +7,26 @@ import {
   SafeAreaView,
   FlatList,
   Button,
+  TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native"; // Add this import
 
 import initialAssets from "./financial_assets.json";
 
+
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "./App";
+
+
 type TAsset = (typeof initialAssets)[number][];
+type AssetFilter = "all" | "stock" | "crypto";
 const PAGE_SIZE = 30;
 
 const HomeScreen: React.FC = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [assets, setAssets] = useState<TAsset>(initialAssets);
   const [page, setPage] = useState(1);
+  const [filter, setFilter] = useState<AssetFilter>("all");
 
   const handleLoadMore = () => {
     const nextPage = page + 1;
@@ -58,6 +68,12 @@ const HomeScreen: React.FC = () => {
       [...assets].sort((a, b) => b.dailyChangePercent - a.dailyChangePercent)
     );
 
+  const filteredAssets = assets.filter(asset => {
+    if (filter === "stock") return asset.type === "stock";
+    if (filter === "crypto") return asset.type === "crypto";
+    return true;
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Sorting:</Text>
@@ -66,16 +82,22 @@ const HomeScreen: React.FC = () => {
         <Button title={"Sort Perf desc"} onPress={handleSortPerfDesc} />
         <Button title={"Sort Name asc"} onPress={handleSortNameAsc}/>
         <Button title={"Sort Name desc"} onPress={handleSortNameDesc} />
+         <Button title={"All"} onPress={() => setFilter("all")} />
+        <Button title={"Filter by stock"} onPress={() => setFilter("stock")} />
+        <Button title={"Filter by crypto"} onPress={() => setFilter("crypto")} />
       </View>
       <FlatList
         keyExtractor={asset => `${asset.id}`}
-        data={assets}
+        data={filteredAssets}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         initialNumToRender={PAGE_SIZE}
         windowSize={7}
         removeClippedSubviews={true}
         renderItem={({ item: asset }) => (
+            <TouchableOpacity
+            onPress={() => navigation.navigate("AssetDetail", { asset })}
+          >
           <View style={styles.itemContainer}>
             <Text style={styles.itemLabel}>
               {"Asset Name: "}
@@ -90,7 +112,9 @@ const HomeScreen: React.FC = () => {
               <Text style={styles.itemValue}>{asset.dailyChangePercent}</Text>
             </Text>
           </View>
+          </TouchableOpacity>
         )}
+        
       />
     </SafeAreaView>
   );
