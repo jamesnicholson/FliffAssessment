@@ -78,19 +78,15 @@ const HomeScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ margin: 10 }}>
-        <Text style={{ color: '#fff', fontWeight: 'bold', marginBottom: 5 }}>
-          Sort By
-        </Text>
+      <View style={styles.menuWrapper}>
+        <Text style={styles.subMenu}>Sort By</Text>
         <View style={styles.betweenContainer}>
           <Button title="Perf Asc" onPress={handleSortPerfAsc} />
           <Button title="Perf Desc" onPress={handleSortPerfDesc} />
           <Button title="Name Asc" onPress={handleSortNameAsc} />
           <Button title="Name Desc" onPress={handleSortNameDesc} />
         </View>
-        <Text style={{ color: '#fff', fontWeight: 'bold', marginVertical: 10 }}>
-          Filter By
-        </Text>
+        <Text style={styles.subMenu}>Filter By</Text>
         <View style={styles.betweenContainer}>
           <Button title="All" onPress={() => setFilter('all')} />
           <Button title="Stock" onPress={() => setFilter('stock')} />
@@ -161,6 +157,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
+  },
+  menuWrapper: {
+    margin: 10,
+  },
+  subMenu: {
+    color: '#fff',
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
 });
 
