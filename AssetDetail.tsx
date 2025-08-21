@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 
 export type Asset = {
+  id: number;
   name: string;
   symbol: string;
   type: string;
@@ -12,6 +13,7 @@ export type Asset = {
 type AssetDetailRoute = {
   params: {
     asset: Asset;
+    similarAssets: Asset[];
   };
 };
 
@@ -20,7 +22,7 @@ type AssetDetailProps = {
 };
 
 const AssetDetail: React.FC<AssetDetailProps> = ({ route }) => {
-  const { asset } = route.params;
+  const { asset, similarAssets } = route.params;
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{asset.name}</Text>
@@ -28,6 +30,21 @@ const AssetDetail: React.FC<AssetDetailProps> = ({ route }) => {
       <Text>Type: {asset.type}</Text>
       <Text>Current Price: {asset.currentPrice}</Text>
       <Text>Daily Change %: {asset.dailyChangePercent}</Text>
+      <Text>Similar Asset:</Text>
+      <FlatList
+        keyExtractor={item => `${item.id}`}
+        data={similarAssets}
+        windowSize={7}
+        removeClippedSubviews={true}
+        horizontal={true}
+        renderItem={({ item }) => (
+          <View style={styles.itemContainer}>
+            <Text>Name: {item.name}</Text>
+            <Text>Price: {item.currentPrice}</Text>
+            <Text>DPC: {item.dailyChangePercent}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 };
@@ -35,6 +52,12 @@ const AssetDetail: React.FC<AssetDetailProps> = ({ route }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  itemContainer: {
+    padding: 15,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    margin: 10,
+    borderRadius: 5,
+  },
 });
 
 export default AssetDetail;

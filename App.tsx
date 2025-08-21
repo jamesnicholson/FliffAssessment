@@ -6,7 +6,7 @@ import AssetDetail, { Asset } from './AssetDetail';
 
 export type RootStackParamList = {
   Home: undefined;
-  AssetDetail: { asset: Asset };
+  AssetDetail: { asset: Asset; similarAssets: Asset[] };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

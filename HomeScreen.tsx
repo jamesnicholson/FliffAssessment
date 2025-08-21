@@ -105,7 +105,12 @@ const HomeScreen: React.FC = () => {
         removeClippedSubviews={true}
         renderItem={({ item: asset }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('AssetDetail', { asset })}
+            onPress={() =>
+              navigation.navigate('AssetDetail', {
+                asset,
+                similarAssets: [...filteredAssets.slice(0, 10)],
+              })
+            }
           >
             <View style={styles.itemContainer}>
               <Text style={styles.itemLabel}>
