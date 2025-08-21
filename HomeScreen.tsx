@@ -9,7 +9,7 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // Add this import
+import { useNavigation } from "@react-navigation/native";
 
 import initialAssets from "./financial_assets.json";
 
@@ -19,7 +19,7 @@ import { RootStackParamList } from "./App";
 
 
 type TAsset = (typeof initialAssets)[number][];
-type AssetFilter = "all" | "stock" | "crypto";
+type AssetFilter = "all" | "stock" | "crypto" | "gainers" | "losers"
 const PAGE_SIZE = 30;
 
 const HomeScreen: React.FC = () => {
@@ -67,12 +67,21 @@ const HomeScreen: React.FC = () => {
     setAssets(
       [...assets].sort((a, b) => b.dailyChangePercent - a.dailyChangePercent)
     );
-
-  const filteredAssets = assets.filter(asset => {
-    if (filter === "stock") return asset.type === "stock";
-    if (filter === "crypto") return asset.type === "crypto";
-    return true;
-  });
+    
+const filteredAssets = assets.filter(asset => {
+  switch (filter) {
+    case "stock":
+      return asset.type === "stock";
+    case "crypto":
+      return asset.type === "crypto";
+    case "gainers":
+      return asset.dailyChangePercent > 0;
+    case "losers":
+      return asset.dailyChangePercent < 0;
+    default:
+      return true;
+  }
+});
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,9 +91,11 @@ const HomeScreen: React.FC = () => {
         <Button title={"Sort Perf desc"} onPress={handleSortPerfDesc} />
         <Button title={"Sort Name asc"} onPress={handleSortNameAsc}/>
         <Button title={"Sort Name desc"} onPress={handleSortNameDesc} />
-         <Button title={"All"} onPress={() => setFilter("all")} />
+        <Button title={"All"} onPress={() => setFilter("all")} />
         <Button title={"Filter by stock"} onPress={() => setFilter("stock")} />
         <Button title={"Filter by crypto"} onPress={() => setFilter("crypto")} />
+        <Button title={"Top gainers"} onPress={() => setFilter("gainers")} />
+        <Button title={"Top losers"} onPress={() => setFilter("losers")} />
       </View>
       <FlatList
         keyExtractor={asset => `${asset.id}`}
