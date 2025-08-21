@@ -1,41 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   FlatList,
   Button,
   TouchableOpacity,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
+} from 'react-native';
 
-import initialAssets from "./financial_assets.json";
-
-
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "./App";
-
+import { useNavigation } from '@react-navigation/native';
+import initialAssets from './financial_assets.json';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from './App';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type TAsset = (typeof initialAssets)[number][];
-type AssetFilter = "all" | "stock" | "crypto" | "gainers" | "losers"
+type AssetFilter = 'all' | 'stock' | 'crypto' | 'gainers' | 'losers';
 const PAGE_SIZE = 30;
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [assets, setAssets] = useState<TAsset>(initialAssets);
   const [page, setPage] = useState(1);
-  const [filter, setFilter] = useState<AssetFilter>("all");
+  const [filter, setFilter] = useState<AssetFilter>('all');
 
-  const handleLoadMore = () => {
-    const nextPage = page + 1;
-    const nextAssets = initialAssets.slice(0, nextPage * PAGE_SIZE);
-    if (nextAssets.length > assets.length) {
-      setAssets(nextAssets);
-      setPage(nextPage);
-    }
-  };
   useEffect(() => {
     const interval = setInterval(() => {
       setAssets(prevAssets =>
@@ -48,54 +37,67 @@ const HomeScreen: React.FC = () => {
     return () => clearInterval(interval);
   }, [assets]);
 
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    const nextAssets = initialAssets.slice(0, nextPage * PAGE_SIZE);
+    if (nextAssets.length > assets.length) {
+      setAssets(nextAssets);
+      setPage(nextPage);
+    }
+  };
   const handleSortNameAsc = (): void =>
-    setAssets(
-      [...assets].sort((a, b) => a.name.localeCompare(b.name)),
-    );
+    setAssets([...assets].sort((a, b) => a.name.localeCompare(b.name)));
 
   const handleSortNameDesc = (): void =>
-    setAssets(
-      [...assets].sort((a, b) =>  b.name.localeCompare(a.name)),
-    );
-    
+    setAssets([...assets].sort((a, b) => b.name.localeCompare(a.name)));
+
   const handleSortPerfAsc = (): void =>
     setAssets(
-      [...assets].sort((a, b) => a.dailyChangePercent - b.dailyChangePercent)
+      [...assets].sort((a, b) => a.dailyChangePercent - b.dailyChangePercent),
     );
 
   const handleSortPerfDesc = (): void =>
     setAssets(
-      [...assets].sort((a, b) => b.dailyChangePercent - a.dailyChangePercent)
+      [...assets].sort((a, b) => b.dailyChangePercent - a.dailyChangePercent),
     );
-    
-const filteredAssets = assets.filter(asset => {
-  switch (filter) {
-    case "stock":
-      return asset.type === "stock";
-    case "crypto":
-      return asset.type === "crypto";
-    case "gainers":
-      return asset.dailyChangePercent > 0;
-    case "losers":
-      return asset.dailyChangePercent < 0;
-    default:
-      return true;
-  }
-});
+
+  const filteredAssets = assets.filter(asset => {
+    switch (filter) {
+      case 'stock':
+        return asset.type === 'stock';
+      case 'crypto':
+        return asset.type === 'crypto';
+      case 'gainers':
+        return asset.dailyChangePercent > 0;
+      case 'losers':
+        return asset.dailyChangePercent < 0;
+      default:
+        return true;
+    }
+  });
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Sorting:</Text>
-      <View style={styles.betweenContainer}>
-        <Button title={"Sort Perf asc"} onPress={handleSortPerfAsc} />
-        <Button title={"Sort Perf desc"} onPress={handleSortPerfDesc} />
-        <Button title={"Sort Name asc"} onPress={handleSortNameAsc}/>
-        <Button title={"Sort Name desc"} onPress={handleSortNameDesc} />
-        <Button title={"All"} onPress={() => setFilter("all")} />
-        <Button title={"Filter by stock"} onPress={() => setFilter("stock")} />
-        <Button title={"Filter by crypto"} onPress={() => setFilter("crypto")} />
-        <Button title={"Top gainers"} onPress={() => setFilter("gainers")} />
-        <Button title={"Top losers"} onPress={() => setFilter("losers")} />
+      <View style={{ margin: 10 }}>
+        <Text style={{ color: '#fff', fontWeight: 'bold', marginBottom: 5 }}>
+          Sort By
+        </Text>
+        <View style={styles.betweenContainer}>
+          <Button title="Perf Asc" onPress={handleSortPerfAsc} />
+          <Button title="Perf Desc" onPress={handleSortPerfDesc} />
+          <Button title="Name Asc" onPress={handleSortNameAsc} />
+          <Button title="Name Desc" onPress={handleSortNameDesc} />
+        </View>
+        <Text style={{ color: '#fff', fontWeight: 'bold', marginVertical: 10 }}>
+          Filter By
+        </Text>
+        <View style={styles.betweenContainer}>
+          <Button title="All" onPress={() => setFilter('all')} />
+          <Button title="Stock" onPress={() => setFilter('stock')} />
+          <Button title="Crypto" onPress={() => setFilter('crypto')} />
+          <Button title="Top Gainers" onPress={() => setFilter('gainers')} />
+          <Button title="Top Losers" onPress={() => setFilter('losers')} />
+        </View>
       </View>
       <FlatList
         keyExtractor={asset => `${asset.id}`}
@@ -106,26 +108,25 @@ const filteredAssets = assets.filter(asset => {
         windowSize={7}
         removeClippedSubviews={true}
         renderItem={({ item: asset }) => (
-            <TouchableOpacity
-            onPress={() => navigation.navigate("AssetDetail", { asset })}
+          <TouchableOpacity
+            onPress={() => navigation.navigate('AssetDetail', { asset })}
           >
-          <View style={styles.itemContainer}>
-            <Text style={styles.itemLabel}>
-              {"Asset Name: "}
-              <Text style={styles.itemValue}>{asset.name}</Text>
-            </Text>
-            <Text style={styles.itemLabel}>
-              {"Asset Price: "}
-              <Text style={styles.itemValue}>{asset.currentPrice}</Text>
-            </Text>
-            <Text style={styles.itemLabel}>
-              {"DPC: "}
-              <Text style={styles.itemValue}>{asset.dailyChangePercent}</Text>
-            </Text>
-          </View>
+            <View style={styles.itemContainer}>
+              <Text style={styles.itemLabel}>
+                {'Asset Name: '}
+                <Text style={styles.itemValue}>{asset.name}</Text>
+              </Text>
+              <Text style={styles.itemLabel}>
+                {'Asset Price: '}
+                <Text style={styles.itemValue}>{asset.currentPrice}</Text>
+              </Text>
+              <Text style={styles.itemLabel}>
+                {'DPC: '}
+                <Text style={styles.itemValue}>{asset.dailyChangePercent}</Text>
+              </Text>
+            </View>
           </TouchableOpacity>
         )}
-        
       />
     </SafeAreaView>
   );
@@ -134,32 +135,32 @@ const filteredAssets = assets.filter(asset => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#151544",
+    backgroundColor: '#151544',
   },
   title: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginLeft: 10,
   },
   itemContainer: {
     padding: 15,
-    backgroundColor: "rgba(255,255,255,0.05)",
+    backgroundColor: 'rgba(255,255,255,0.05)',
     margin: 10,
     borderRadius: 5,
   },
   itemLabel: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 14,
   },
   itemValue: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   betweenContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
   },
 });
 
