@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
-  Button,
   TouchableOpacity,
 } from 'react-native';
 
@@ -14,16 +13,18 @@ import initialAssets from './financial_assets.json';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './App';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Menu from './components/Menu/Menu';
+import { AssetFilter, AssetSort } from './types';
 
-type TAsset = (typeof initialAssets)[number][];
-type AssetFilter = 'all' | 'stock' | 'crypto' | 'gainers' | 'losers';
 const PAGE_SIZE = 30;
+type TAsset = (typeof initialAssets)[number][];
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [assets, setAssets] = useState<TAsset>(initialAssets);
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState<AssetFilter>('all');
+  const [sort, setSort] = useState<AssetSort>('nameAsc');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -37,64 +38,60 @@ const HomeScreen: React.FC = () => {
     return () => clearInterval(interval);
   }, [assets]);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     const nextPage = page + 1;
     const nextAssets = initialAssets.slice(0, nextPage * PAGE_SIZE);
     if (nextAssets.length > assets.length) {
       setAssets(nextAssets);
       setPage(nextPage);
     }
-  };
-  const handleSortNameAsc = (): void =>
-    setAssets([...assets].sort((a, b) => a.name.localeCompare(b.name)));
+  }, [page, assets.length]);
 
-  const handleSortNameDesc = (): void =>
-    setAssets([...assets].sort((a, b) => b.name.localeCompare(a.name)));
-
-  const handleSortPerfAsc = (): void =>
-    setAssets(
-      [...assets].sort((a, b) => a.dailyChangePercent - b.dailyChangePercent),
+  const handleSort = useCallback((sortType: AssetSort) => {
+    setSort(sortType);
+    setAssets(prev =>
+      [...prev].sort((a, b) => {
+        switch (sortType) {
+          case 'nameAsc':
+            return a.name.localeCompare(b.name);
+          case 'nameDesc':
+            return b.name.localeCompare(a.name);
+          case 'perfAsc':
+            return a.dailyChangePercent - b.dailyChangePercent;
+          case 'perfDesc':
+            return b.dailyChangePercent - a.dailyChangePercent;
+          default:
+            return 0;
+        }
+      }),
     );
+  }, []);
 
-  const handleSortPerfDesc = (): void =>
-    setAssets(
-      [...assets].sort((a, b) => b.dailyChangePercent - a.dailyChangePercent),
-    );
-
-  const filteredAssets = assets.filter(asset => {
-    switch (filter) {
-      case 'stock':
-        return asset.type === 'stock';
-      case 'crypto':
-        return asset.type === 'crypto';
-      case 'gainers':
-        return asset.dailyChangePercent > 0;
-      case 'losers':
-        return asset.dailyChangePercent < 0;
-      default:
-        return true;
-    }
-  });
+  const filteredAssets = useMemo(() => {
+    return assets.filter(asset => {
+      switch (filter) {
+        case 'stock':
+          return asset.type === 'stock';
+        case 'crypto':
+          return asset.type === 'crypto';
+        case 'gainers':
+          return asset.dailyChangePercent > 0;
+        case 'losers':
+          return asset.dailyChangePercent < 0;
+        default:
+          return true;
+      }
+    });
+  }, [assets, filter]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.menuWrapper}>
-        <Text style={styles.subMenu}>Sort By</Text>
-        <View style={styles.betweenContainer}>
-          <Button title="Perf Asc" onPress={handleSortPerfAsc} />
-          <Button title="Perf Desc" onPress={handleSortPerfDesc} />
-          <Button title="Name Asc" onPress={handleSortNameAsc} />
-          <Button title="Name Desc" onPress={handleSortNameDesc} />
-        </View>
-        <Text style={styles.subMenu}>Filter By</Text>
-        <View style={styles.betweenContainer}>
-          <Button title="All" onPress={() => setFilter('all')} />
-          <Button title="Stock" onPress={() => setFilter('stock')} />
-          <Button title="Crypto" onPress={() => setFilter('crypto')} />
-          <Button title="Top Gainers" onPress={() => setFilter('gainers')} />
-          <Button title="Top Losers" onPress={() => setFilter('losers')} />
-        </View>
-      </View>
+      <Menu
+        currentFilter={filter}
+        currentSort={sort}
+        onSort={handleSort}
+        onFilter={setFilter}
+      />
       <FlatList
         keyExtractor={asset => `${asset.id}`}
         data={filteredAssets}
@@ -113,18 +110,24 @@ const HomeScreen: React.FC = () => {
             }
           >
             <View style={styles.itemContainer}>
-              <Text style={styles.itemLabel}>
-                {'Asset Name: '}
-                <Text style={styles.itemValue}>{asset.name}</Text>
-              </Text>
-              <Text style={styles.itemLabel}>
-                {'Asset Price: '}
-                <Text style={styles.itemValue}>{asset.currentPrice}</Text>
-              </Text>
-              <Text style={styles.itemLabel}>
-                {'DPC: '}
-                <Text style={styles.itemValue}>{asset.dailyChangePercent}</Text>
-              </Text>
+              <View style={styles.assetInfo}>
+                <Text style={styles.itemLabel}>
+                  <Text style={styles.itemValue}>{asset.name}</Text>
+                </Text>
+                <Text style={styles.itemLabel}>
+                  {'Asset Price: '}
+                  <Text style={styles.itemValue}>{asset.currentPrice}</Text>
+                </Text>
+                <Text style={styles.itemLabel}>
+                  {'DPC: '}
+                  <Text style={styles.itemValue}>
+                    {asset.dailyChangePercent}
+                  </Text>
+                </Text>
+              </View>
+              <View style={styles.symbol}>
+                <Text style={styles.symbolText}>{asset.symbol}</Text>
+              </View>
             </View>
           </TouchableOpacity>
         )}
@@ -144,15 +147,43 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 10,
   },
+  button: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+  buttonSelected: {
+    backgroundColor: '#4f46e5', // A distinct color for the selected state.
+  },
+
   itemContainer: {
     padding: 15,
     backgroundColor: 'rgba(255,255,255,0.05)',
     margin: 10,
     borderRadius: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   itemLabel: {
     color: '#fff',
     fontSize: 14,
+  },
+  assetInfo: {},
+  symbol: {
+    borderRadius: 5,
+    backgroundColor: '#4f46e5',
+    color: '#fff',
+    padding: 5,
+    maxWidth: 35,
+    maxHeight: 35,
+    alignItems: 'center',
+  },
+  symbolText: {
+    borderRadius: 25,
+    padding: 5,
+    fontSize: 11,
+    fontWeight: 'bold',
   },
   itemValue: {
     fontWeight: 'bold',

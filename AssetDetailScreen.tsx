@@ -21,22 +21,29 @@ type AssetDetailProps = {
   route: AssetDetailRoute;
 };
 
-const AssetDetail: React.FC<AssetDetailProps> = ({ route }) => {
+const AssetDetailScreen: React.FC<AssetDetailProps> = ({ route }) => {
   const { asset, similarAssets } = route.params;
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{asset.name}</Text>
-      <Text>Symbol: {asset.symbol}</Text>
-      <Text>Type: {asset.type}</Text>
-      <Text>Current Price: {asset.currentPrice}</Text>
-      <Text>Daily Change %: {asset.dailyChangePercent}</Text>
-      <Text>Similar Asset:</Text>
+      <Text style={styles.assetItemDetail}>Symbol: {asset.symbol}</Text>
+      <Text style={styles.assetItemDetail}>Type: {asset.type}</Text>
+      <Text style={styles.assetItemDetail}>
+        Current Price: {asset.currentPrice}
+      </Text>
+      <Text style={styles.assetItemDetail}>
+        Daily Change %: {asset.dailyChangePercent}
+      </Text>
+      <Text style={styles.title}>Similar Asset:</Text>
+
       <FlatList
         keyExtractor={item => `${item.id}`}
         data={similarAssets}
         windowSize={7}
         removeClippedSubviews={true}
         horizontal={true}
+        contentContainerStyle={{ alignItems: 'baseline' }} // aligns items vertically
+        showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             <Text>Name: {item.name}</Text>
@@ -50,14 +57,29 @@ const AssetDetail: React.FC<AssetDetailProps> = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#151544',
+  },
+  title: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
   itemContainer: {
     padding: 15,
     backgroundColor: 'rgba(255,255,255,0.05)',
     margin: 10,
     borderRadius: 5,
   },
+  assetItemDetail: {
+    color: '#fff',
+    fontSize: 16,
+    marginVertical: 5,
+  },
 });
 
-export default AssetDetail;
+export default AssetDetailScreen;
