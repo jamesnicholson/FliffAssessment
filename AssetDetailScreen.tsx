@@ -1,14 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-
-export type Asset = {
-  id: number;
-  name: string;
-  symbol: string;
-  type: string;
-  currentPrice: number;
-  dailyChangePercent: number;
-};
+import { Asset } from './components/AssetItem/AssetItem.type';
+import AssetItem from './components/AssetItem/AssetItem';
 
 type AssetDetailRoute = {
   params: {
@@ -44,13 +37,7 @@ const AssetDetailScreen: React.FC<AssetDetailProps> = ({ route }) => {
         horizontal={true}
         contentContainerStyle={{ alignItems: 'baseline' }} // aligns items vertically
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <Text>Name: {item.name}</Text>
-            <Text>Price: {item.currentPrice}</Text>
-            <Text>DPC: {item.dailyChangePercent}</Text>
-          </View>
-        )}
+        renderItem={({ item }) => <AssetItem asset={item} />}
       />
     </View>
   );

@@ -1,12 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import initialAssets from './financial_assets.json';
@@ -15,6 +9,7 @@ import { RootStackParamList } from './App';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Menu from './components/Menu/Menu';
 import { AssetFilter, AssetSort } from './types';
+import AssetItem from './components/AssetItem/AssetItem';
 
 const PAGE_SIZE = 30;
 type TAsset = (typeof initialAssets)[number][];
@@ -101,35 +96,15 @@ const HomeScreen: React.FC = () => {
         windowSize={7}
         removeClippedSubviews={true}
         renderItem={({ item: asset }) => (
-          <TouchableOpacity
+          <AssetItem
+            asset={asset}
             onPress={() =>
               navigation.navigate('AssetDetail', {
                 asset,
                 similarAssets: [...filteredAssets.slice(0, 10)],
               })
             }
-          >
-            <View style={styles.itemContainer}>
-              <View style={styles.assetInfo}>
-                <Text style={styles.itemLabel}>
-                  <Text style={styles.itemValue}>{asset.name}</Text>
-                </Text>
-                <Text style={styles.itemLabel}>
-                  {'Asset Price: '}
-                  <Text style={styles.itemValue}>{asset.currentPrice}</Text>
-                </Text>
-                <Text style={styles.itemLabel}>
-                  {'DPC: '}
-                  <Text style={styles.itemValue}>
-                    {asset.dailyChangePercent}
-                  </Text>
-                </Text>
-              </View>
-              <View style={styles.symbol}>
-                <Text style={styles.symbolText}>{asset.symbol}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
+          />
         )}
       />
     </SafeAreaView>
