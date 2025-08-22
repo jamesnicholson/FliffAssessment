@@ -2,7 +2,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
-import AssetDetailScreen, { Asset } from './AssetDetailScreen';
+import AssetDetailScreen from './AssetDetailScreen';
+import { Asset } from './components/AssetItem/AssetItem.type';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -20,7 +21,15 @@ export default function App() {
           component={HomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="AssetDetail" component={AssetDetailScreen} />
+        <Stack.Screen
+          name="AssetDetail"
+          component={AssetDetailScreen}
+          options={{
+            title: 'Asset Details',
+            headerTintColor: '#fff',
+            headerStyle: { backgroundColor: '#353571ff' },
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
