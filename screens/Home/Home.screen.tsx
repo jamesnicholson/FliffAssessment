@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { StyleSheet, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import initialAssets from '../../financial_assets.json';
