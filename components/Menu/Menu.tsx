@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import styles from './Menu.styles';
 import type { MenuProps } from './Menu.types';
-import { AssetFilter, AssetSort } from '../../types';
+import { AssetFilter, AssetSort } from '../AssetItem';
 
 const Menu: React.FC<MenuProps> = ({
   currentSort,

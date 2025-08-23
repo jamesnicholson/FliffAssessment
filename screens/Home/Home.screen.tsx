@@ -3,13 +3,13 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
-import initialAssets from './financial_assets.json';
+import initialAssets from '../../financial_assets.json';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from './App';
+import { RootStackParamList } from '../../App';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Menu from './components/Menu/Menu';
-import { AssetFilter, AssetSort } from './types';
-import AssetItem from './components/AssetItem/AssetItem';
+import Menu from '../../components/Menu';
+import AssetItem, { AssetFilter, AssetSort } from '../../components/AssetItem';
+import styles from './Home.styles';
 
 const PAGE_SIZE = 30;
 type TAsset = (typeof initialAssets)[number][];
@@ -110,73 +110,4 @@ const HomeScreen: React.FC = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#151544',
-  },
-  title: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginLeft: 10,
-  },
-  button: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-  },
-  buttonSelected: {
-    backgroundColor: '#4f46e5', // A distinct color for the selected state.
-  },
-
-  itemContainer: {
-    padding: 15,
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    margin: 10,
-    borderRadius: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  itemLabel: {
-    color: '#fff',
-    fontSize: 14,
-  },
-  assetInfo: {},
-  symbol: {
-    borderRadius: 5,
-    backgroundColor: '#4f46e5',
-    color: '#fff',
-    padding: 5,
-    maxWidth: 35,
-    maxHeight: 35,
-    alignItems: 'center',
-  },
-  symbolText: {
-    borderRadius: 25,
-    padding: 5,
-    fontSize: 11,
-    fontWeight: 'bold',
-  },
-  itemValue: {
-    fontWeight: 'bold',
-  },
-  betweenContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-  },
-  menuWrapper: {
-    margin: 10,
-  },
-  subMenu: {
-    color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-});
-
 export default HomeScreen;

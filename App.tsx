@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './HomeScreen';
-import AssetDetailScreen from './AssetDetailScreen';
-import { Asset } from './components/AssetItem/AssetItem.type';
+import HomeScreen from './screens/Home';
+import { AssetDetailScreen } from './screens/AssetDetails';
+import { Asset } from './components/AssetItem';
 
 export type RootStackParamList = {
   Home: undefined;
