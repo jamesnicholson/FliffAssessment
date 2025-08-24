@@ -9,9 +9,11 @@ A React Native mobile application for browsing and analyzing financial assets, i
 - **Responsive Navigation**: Built with `@react-navigation` for seamless transitions between screens.
 - **Type Safety**: Uses TypeScript for robust type checking.
 - **Testing**: Comprehensive unit and integration tests using Jest and `@testing-library/react-native`.
-<img width="343" height="723" alt="Screenshot 2025-08-24 at 12 04 13" src="https://github.com/user-attachments/assets/73cfcb4b-4846-44a1-b499-80dfd85430bd" />
+- 
+## Screenshots
 <img width="343" height="723" alt="Screenshot 2025-08-24 at 12 03 55" src="https://github.com/user-attachments/assets/b244705e-9c8d-4e41-9fcc-98bf2678e00c" />
+<img width="343" height="723" alt="Screenshot 2025-08-24 at 12 04 13" src="https://github.com/user-attachments/assets/73cfcb4b-4846-44a1-b499-80dfd85430bd" />
 
-
+## Video Demo
 https://github.com/user-attachments/assets/81c4e157-7e49-4ad4-b9e6-3ade77c32d90
 
