@@ -10,9 +10,8 @@ export type RootStackParamList = {
   AssetDetail: { asset: Asset; similarAssets: Asset[] };
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
-
 export default function App() {
+  const Stack = createStackNavigator<RootStackParamList>();
   return (
     <NavigationContainer>
       <Stack.Navigator>

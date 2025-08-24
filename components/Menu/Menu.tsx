@@ -32,6 +32,7 @@ const Menu: React.FC<MenuProps> = ({
         {sortOptions.map(option => (
           <TouchableOpacity
             key={option.value}
+            testID={`sort-button-${option.value}`}
             style={[
               styles.button,
               currentSort === option.value && styles.buttonSelected,
@@ -47,6 +48,7 @@ const Menu: React.FC<MenuProps> = ({
         {filterOptions.map(option => (
           <TouchableOpacity
             key={option.value}
+            testID={`filter-button-${option.value}`}
             style={[
               styles.button,
               currentFilter === option.value && styles.buttonSelected,

@@ -1,13 +1,13 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { AssetProps } from './AssetItem.type';
-import styles from './AssetItem.style';
+import styles from './AssetItem.styles';
 
 const AssetItem: React.FC<AssetProps> = ({ asset, onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} testID={`asset-item-${asset.id}`}>
       <View style={styles.assetContainer}>
         <View>
-          <Text style={styles.assetLabel}>
+          <Text style={styles.assetLabel} testID={`asset-name`}>
             <Text style={styles.assetValue}>{asset.name}</Text>
           </Text>
 
@@ -15,7 +15,7 @@ const AssetItem: React.FC<AssetProps> = ({ asset, onPress }) => {
             {'DPC: '}
             <Text style={styles.assetValue}>{asset.dailyChangePercent}</Text>
           </Text>
-          <Text style={styles.assetLabel}>
+          <Text style={styles.assetLabel} testID={`asset-price`}>
             {'Asset Price: '}
             <Text style={styles.assetValue}>{asset.currentPrice}</Text>
           </Text>

@@ -80,7 +80,7 @@ const HomeScreen: React.FC = () => {
   }, [assets, filter]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} testID="home-screen">
       <Menu
         currentFilter={filter}
         currentSort={sort}
@@ -89,6 +89,7 @@ const HomeScreen: React.FC = () => {
       />
       <FlatList
         keyExtractor={asset => `${asset.id}`}
+        testID="asset-list"
         data={filteredAssets}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}

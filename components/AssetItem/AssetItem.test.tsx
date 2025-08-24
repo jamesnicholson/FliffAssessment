@@ -3,7 +3,7 @@ import React from 'react';
 import AssetItem from './AssetItem';
 import { AssetProps } from './AssetItem.type';
 
-jest.mock('./AssetItem.style', () => ({
+jest.mock('./AssetItem.styles', () => ({
   assetContainer: {},
   assetLabel: {},
   assetValue: {},
